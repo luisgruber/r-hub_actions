@@ -58,10 +58,11 @@ runs:
   - uses: r-lib/actions/check-r-package@v2
     if: ${{ ! steps.check-script.outputs.check-script }}
     with:
-      args: "c('--no-manual', if (!grepl('(^| )[-][-]extra[-]arch( |$)', Sys.getenv('CHECK_ARGS'))) '--as-cran', '--install-args=--build', strsplit(Sys.getenv('CHECK_ARGS'), '[ ]+')[[1]])"
-      build_args: "c('--no-manual', strsplit(Sys.getenv('BUILD_ARGS'), '[ ]+')[[1]])"
+      args: "c('--no-manual', if (!grepl('(^| )[-][-]extra[-]arch( |$)', Sys.getenv('CHECK_ARGS'))) '--as-cran', '--install-args=--build', if (!grepl('--no-build-vignettes', Sys.getenv('CHECK_ARGS'))) '--no-build-vignettes', if (!grepl('--no-stop-on-test-error', Sys.getenv('CHECK_ARGS'))) '--no-stop-on-test-error', strsplit(Sys.getenv('CHECK_ARGS'), '[ ]+')[[1]])"
+      build_args: "c('--no-manual', if (!grepl('--no-build-vignettes', Sys.getenv('BUILD_ARGS'))) '--no-build-vignettes', strsplit(Sys.getenv('BUILD_ARGS'), '[ ]+')[[1]])"
       upload-results: never
       upload-snapshots: false
+      error-on: '"error"'
     env:
       R_KEEP_PKG_SOURCE: yes
 
